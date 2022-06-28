@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "chance": "^1.1.8",
+    "events": "^3.3.0",
+    "jest": "^28.1.1"
+  },
+  "name": "caps",
+  "description": "",
+  "version": "1.0.0",
+  "main": "hub.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kath-a-rine/CAPS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kath-a-rine/CAPS/issues"
+  },
+  "homepage": "https://github.com/kath-a-rine/CAPS#readme"
+}
