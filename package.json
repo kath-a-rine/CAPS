@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "chance": "^1.1.8",
+    "events": "^3.3.0",
+    "jest": "^28.1.1"
+  },
+  "name": "caps",
+  "description": "",
+  "version": "1.0.0",
+  "main": "hub.js",
+  "scripts": {
+    "start": "node index.js",
+    "lint": "eslint **/*.js",
+    "test": "jest --verbose --coverage",
+    "test-watch": "jest --watchAll --verbose --coverage"
+},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kath-a-rine/CAPS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kath-a-rine/CAPS/issues"
+  },
+  "homepage": "https://github.com/kath-a-rine/CAPS#readme"
+}
