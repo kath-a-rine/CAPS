@@ -6,23 +6,22 @@ const PORT = process.env.PORT || 3002;
 
 const server = new Server(PORT);
 
-const caps = server.of('./caps');
+const caps = server.of('/caps');
 
+server.on('connection', (socket) => {
+  console.log('Socket connected to Event Server', socket.id);
 
-// server.on('connection', (socket) => {
-//   console.log('Socket connected to Event Server', socket.id);
+  socket.on('MESSAGE', (payload) => {
+    console.log('Server MESSAGE event ', payload);
 
-//   socket.on('MESSAGE', (payload) => {
-//     console.log('Server MESSAGE event ', payload);
+    socket.broadcast.emit('MESSAGE', payload);
+  });
 
-//     socket.broadcast.emit('MESSAGE', payload);
-//   });
-
-//   socket.on('RECEIVED', (payload) => {
-//     console.log('Server RECEIVED event ', payload);
-//     socket.broadcast.emit('RECEIVED', payload);
-//   });
-// });
+  socket.on('RECEIVED', (payload) => {
+    console.log('Server RECEIVED event ', payload);
+    socket.broadcast.emit('RECEIVED', payload);
+  });
+});
 
 caps.on('connection', (socket) => {
   console.log('connected to the caps namespace', socket.id);
@@ -34,17 +33,17 @@ caps.on('connection', (socket) => {
 
   socket.on('PICKUP', (payload) => {
     logger('PICKUP', payload);
-    socket.broadcast.emit('PICKUP', payload);
+    caps.emit('PICKUP', payload);
   });
 
-  socket.on('TRANSIT', (payload) => {
-    logger('TRANSIT', payload);
-    caps.emit('TRANSIT', payload);
+  socket.on('IN-TRANSIT', (payload) => {
+    logger('IN-TRANSIT', payload);
+    caps.to(payload.store).emit('IN-TRANSIT', payload);
   });
 
   socket.on('DELIVERED', (payload) => {
     logger('DELIVERED', payload);
-    caps.emit('DELIVERED', payload);
+    caps.to(payload.store).emit('DELIVERED', payload);
   });
 });
 
