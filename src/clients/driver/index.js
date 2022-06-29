@@ -1,18 +1,18 @@
 'use strict';
 
-const eventPool = require('../eventPool');
+const { io } = require('socket.io-client');
+const socket = io('http://localhost:3002/caps');
 
-eventPool.on('PICKUP', driverPickup);
-
-function driverPickup(payload){
+socket.on('PICKUP', (payload) => {
   setTimeout(() => {
     console.log(`DRIVER: picked up order ${payload.orderId}`);
-    eventPool.emit('TRANSIT', payload);
+    socket.emit('TRANSIT', payload);
 
   }, 1000);
 
   setTimeout(() => {
     console.log(`DRIVER: delivered order ${payload.orderId}`);
-    eventPool.emit('DELIVERED', payload);
+    socket.emit('DELIVERED', payload);
   }, 3000);
-}
+},
+);

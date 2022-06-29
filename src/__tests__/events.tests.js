@@ -1,14 +1,17 @@
 'use strict';
 
-const eventPool = require('../eventPool');
-
 // Write unit tests for each event handler function (not event triggers themselves).
 //Use spies to help testing your logger methods (assert that console.log was called right).
 
-jest.mock('../eventPool', () => {
+jest.mock('socket.io-client', () => { //'socket.io-client
   return {
-    on: jest.fn(),
-    emit: jest.fn(),
+    io:jest.fn(() => {
+      return {
+        on: jest.fn(),
+        emit: jest.fn(),
+      };
+    },
+    ),
   };
 });
 
