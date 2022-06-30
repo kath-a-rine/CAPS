@@ -15,7 +15,7 @@ setInterval(() => {
     address: chance.address(),
   };
 
-  vendor.publish('PICKUP', payload);
+  vendor.publish('PICKUP', { messageId: chance.guid(), payload });
 }, 3000);
 
 setInterval(() => {
@@ -26,10 +26,10 @@ setInterval(() => {
     address: chance.address(),
   };
 
-  vendor.publish('PICKUP', payload);
+  vendor.publish('PICKUP', { messageId: chance.guid(), payload });
 }, 5000);
 
-vendor.subscribe('DELIVERED', (payload) => {
+vendor.subscribe('RECEIVED', (payload) => {
   console.log('VENDOR: Thank you for delivering order', payload.orderId);
 });
 

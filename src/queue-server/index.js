@@ -30,7 +30,6 @@ caps.on('connection', (socket) => {
       currentQueue = messageQueue.read(queueKey);
     }
     currentQueue.store(payload.messageId, payload);
-    // logger('PICKUP', payload);
     caps.emit('PICKUP', payload);
   });
 
@@ -41,7 +40,6 @@ caps.on('connection', (socket) => {
       currentQueue = messageQueue.read(queueKey);
     }
     currentQueue.store(payload.messageId, payload);
-    //logger('IN-TRANSIT', payload);
     caps.to(payload.store).emit('IN-TRANSIT', payload);
   });
 
@@ -52,8 +50,6 @@ caps.on('connection', (socket) => {
       currentQueue = messageQueue.read(queueKey);
     }
     currentQueue.store(payload.messageId, payload);
-
-    //logger('DELIVERED', payload);
     caps.to(payload.store).emit('DELIVERED', payload);
   });
 
@@ -63,13 +59,6 @@ caps.on('connection', (socket) => {
       throw new Error('no queue created for this message');
     }
     let message = currentQueue.remove(payload.messageId);
-
     caps.to(payload.queueId).emit('RECEIVED', message);
   });
 });
-
-
-// function logger(event, payload) {
-//   let time = new Date();
-//   console.log('EVENT', { event, time, payload });
-// }
