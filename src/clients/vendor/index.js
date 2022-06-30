@@ -1,25 +1,35 @@
 'use strict';
 
-const { io } = require('socket.io-client');
-const socket = io('http://localhost:3002/caps');
+const MessageClient = require('../message-clients')
 
 const Chance = require('chance');
 const chance = new Chance();
 
+let vendor = new MessageClient();
 
 setInterval(() => {
   let payload = {
-    store: chance.company(),
+    store: 'acme-widgets',
     orderId: chance.integer({ min: 1, max: 300}),
     customer: chance.name(),
     address: chance.address(),
   };
-  socket.emit('JOIN', payload.store);
 
-  socket.emit('PICKUP', payload);
+  vendor.publish('PICKUP', payload);
 }, 3000);
 
-socket.on('DELIVERED', (payload) => {
+setInterval(() => {
+  let payload = {
+    store: '1-800-flowers',
+    orderId: chance.integer({ min: 1, max: 300}),
+    customer: chance.name(),
+    address: chance.address(),
+  };
+
+  vendor.publish('PICKUP', payload);
+}, 5000);
+
+vendor.subscribe('DELIVERED', (payload) => {
   console.log('VENDOR: Thank you for delivering order', payload.orderId);
 });
 
