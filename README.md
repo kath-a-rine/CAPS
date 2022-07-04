@@ -6,6 +6,8 @@
 
 **CAPS Phase 2:** Continue working on a multi-day build of our delivery tracking system, creating an event observable over a network with Socket.io.
 
+**CAPS Phase 3:** Complete work on a multi-day build of our delivery tracking system, adding queued delivery.
+
 ### UML
 
 ![uml](./lab-11-uml.png);

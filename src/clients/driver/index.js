@@ -1,18 +1,22 @@
 'use strict';
 
-const { io } = require('socket.io-client');
-const socket = io('http://localhost:3002/caps');
+const MessageClient = require('../message-clients');
+const driver = new MessageClient();
 
-socket.on('PICKUP', (payload) => {
+driver.subscribe('PICKUP', (payload) => {
   setTimeout(() => {
     console.log(`DRIVER: picked up order ${payload.orderId}`);
-    socket.emit('TRANSIT', payload);
+    driver.publish('TRANSIT', payload);
 
   }, 1000);
 
   setTimeout(() => {
     console.log(`DRIVER: delivered order ${payload.orderId}`);
-    socket.emit('DELIVERED', payload);
+    driver.publish('DELIVERED', payload);
   }, 3000);
 },
 );
+
+driver.subscribe('DELIVERED', (payload) => {
+  console.log('VENDOR: Thank you for delivering order', payload.orderId);
+});
