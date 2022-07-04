@@ -18,39 +18,35 @@ caps.on('connection', (socket) => {
   });
 
   socket.on('JOIN', (queueId) => {
+    console.log(`joined the ${queueId} room` );
     socket.join(queueId);
     socket.emit('JOIN', queueId);
   });
 
   //events
   socket.on('PICKUP', (payload) => {
+    console.log('SOCKET PICKUP PAYLOAD', payload);
     let currentQueue = messageQueue.read(payload.queueId);
     if (!currentQueue){
       let queueKey = messageQueue.store(payload.queueId, new Queue());
       currentQueue = messageQueue.read(queueKey);
     }
-    currentQueue.store(payload.messageId, payload);
-    caps.emit('PICKUP', payload);
+    let message = currentQueue.store(payload);
+    caps.emit('PICKUP', message);
   });
 
   socket.on('IN-TRANSIT', (payload) => {
     let currentQueue = messageQueue.read(payload.queueId);
-    if (!currentQueue){
-      let queueKey = messageQueue.store(payload.queueId, new Queue());
-      currentQueue = messageQueue.read(queueKey);
-    }
-    currentQueue.store(payload.messageId, payload);
-    caps.to(payload.store).emit('IN-TRANSIT', payload);
+
+    let message = currentQueue.store(payload);
+    caps.to(payload.store).emit('IN-TRANSIT', message);
   });
 
   socket.on('DELIVERED', (payload) => {
     let currentQueue = messageQueue.read(payload.queueId);
-    if (!currentQueue){
-      let queueKey = messageQueue.store(payload.queueId, new Queue());
-      currentQueue = messageQueue.read(queueKey);
-    }
-    currentQueue.store(payload.messageId, payload);
-    caps.to(payload.store).emit('DELIVERED', payload);
+
+    let message = currentQueue.store(payload);
+    caps.emit('DELIVERED', message);
   });
 
   socket.on('RECEIVED', (payload) => {
@@ -58,7 +54,11 @@ caps.on('connection', (socket) => {
     if(!currentQueue){
       throw new Error('no queue created for this message');
     }
-    let message = currentQueue.remove(payload.messageId);
-    caps.to(payload.queueId).emit('RECEIVED', message);
+    Object.keys(currentQueue.data).forEach(queueItem => {
+      console.log('this happens', queueItem);
+      //read all items and delete as sent
+      let message = currentQueue.remove(payload.messageId);
+      caps.to(payload.queueId).emit('RECEIVED', message);
+    });
   });
 });
